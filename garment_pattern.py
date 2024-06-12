@@ -78,48 +78,63 @@ def draw_curved_line(p1, p2, offset_distance):
     # Plot the Bezier curve
     plt.plot(x_curve, y_curve, 'k-')
 
-def draw_trouser_pattern(body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat):
-    plt.figure(figsize=(10, 10))
+def point_at_distance(p1, p2, distance):
+    """
+    Finds a point that is a certain distance along the continuation of the line from p1 to p2.
 
-    # Define the first point (Point 1)
-    point0 = (0, 0)
+    Parameters:
+    p1 (tuple): The starting point (x1, y1).
+    p2 (tuple): The end point (x2, y2).
+    distance (float): The distance from p2 along the line.
 
-    # Define the center reference points
-    point1 = (point0[0], point0[1] - ((body_rise + 1) - waistband_depth))
-    point2 = (point0[0], point1[1] - inseam)
-    point3 = (point0[0], point2[1] + ((inseam / 2) + 5))
-    point4 = (point0[0], point1[1] + (body_rise / 4))
+    Returns:
+    tuple: The new point (x, y) that is the specified distance from p2 along the line.
+    """
+    # Convert points to numpy arrays
+    p1 = np.array(p1)
+    p2 = np.array(p2)
 
-    # Define the fly reference point and fly curve point
-    point_fly_ref = (point0[0] - ((seat / 8) - 1), point1[1])
-    # point5 = (x2, y2)
-    point_fly_curve = create_diagonal_point(point_fly_ref[0], point_fly_ref[1], 3, 45)
+    # Calculate the direction vector from p1 to p2
+    direction = p2 - p1
 
-    # Define the remaining points
-    point6 = (point_fly_ref[0], point4[1])
-    point7 = (point_fly_ref[0], point0[1])
-    point8 = (point6[0] + ((seat / 4) + 2), point4[1])
-    point9 = (point_fly_ref[0] - ((seat / 16) + .5), point1[1])
-    point10 = (point7[0] + 1, point0[1])
-    point11 = (point10[0] + ((waist / 4) + 2.5), point0[1])
-    point12 = (point2[0] + (trouser_bottom_width / 2), point2[1])
-    point13 = (point2[0] - (trouser_bottom_width / 2), point2[1])
-    point14 = (point3[0] + ((trouser_bottom_width / 2) + 1.5), point3[1])
-    point15 = (point3[0] - ((trouser_bottom_width / 2) + 1.5), point3[1])
+    # Normalize the direction vector
+    direction_norm = direction / np.linalg.norm(direction)
 
-    # Define the waistband adjustment point
-    pointA = find_point_along_line(point10, point6, 1)
+    # Scale the direction vector by the desired distance
+    scaled_vector = direction_norm * distance
 
-    # Plot the points
-    # points = [point0, point1, point2, point3, point4, point_fly_ref, point_fly_curve, point6, point7, point8, point9, point10, point11, point12, point13, point14, point15, pointA]
-    # x_coords, y_coords = zip(*points)
-    # plt.scatter(x_coords, y_coords, color='blue', label='Pattern Points')
+    # Calculate the new point
+    new_point = p2 + scaled_vector
 
-    # # Annotate points
-    # for i, (x, y) in enumerate(points, start=0):
-    #     plt.text(x, y, f'{i}', fontsize=12, ha='right')
+    return tuple(new_point)
 
 
+def point_at_distance_with_fixed_y(reference_point, y_fixed_point, distance):
+    """
+    Finds a point that is a certain distance diagonally from a reference point
+    but has the same y value as another point.
+
+    Parameters:
+    reference_point (tuple): The reference point (x1, y1).
+    y_fixed_point (tuple): The point providing the fixed y value (x2, y2).
+    distance (float): The diagonal distance from the reference point.
+
+    Returns:
+    tuple: The new point (x, y_fixed) that is the specified distance from the reference point.
+    """
+    x1, y1 = reference_point
+    _, y_fixed = y_fixed_point
+
+    # Calculate the horizontal distance (dx)
+    dx = distance
+
+    # Determine the new x coordinate
+    new_x = x1 + dx
+
+    # Return the new point with the fixed y value
+    return (new_x, y_fixed)
+
+def draw_trouser_front_pattern(body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat):
     # Draw the garment pattern
     plt.plot([])
 
@@ -136,11 +151,11 @@ def draw_trouser_pattern(body_rise, waist, waistband_depth, trouser_bottom_width
     plt.plot([pointA[0], point6[0]], [pointA[1], point6[1]], 'k-')
 
     # Draw the inseam and side seam of the bottoms of the legs
-    # plt.plot([point15[0], point13[0]], [point15[1], point13[1]], 'k-')
+    plt.plot([point15[0], point13[0]], [point15[1], point13[1]], 'k-')
     plt.plot([point14[0], point12[0]], [point14[1], point12[1]], 'k-')
 
     # Draw the inseam
-    draw_curved_line(point9, point13, 4.5)
+    # draw_curved_line(point9, point13, 4.5)
     # point9_control = find_control_point(point9, point13, 4.5)
     # x_curve, y_curve = bezier_curve(point9, point9_control, point13)
     # plt.plot(x_curve, y_curve, 'k-')
@@ -153,6 +168,104 @@ def draw_trouser_pattern(body_rise, waist, waistband_depth, trouser_bottom_width
 
     # Draw the side seam
     plt.plot([point8[0], point14[0]], [point8[1], point14[1]], 'k-')
+
+    plt.title('Trousers Pattern')
+    plt.grid(False)
+    plt.axis('equal')
+    # plt.legend()
+    plt.show()
+
+def draw_trouser_pattern_points(body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat):
+    plt.figure(figsize=(10, 10))
+
+    # Define the first point (Point 1)
+    point0 = (0, 0)
+
+    # Define the center reference points
+    point1 = (point0[0], point0[1] - ((body_rise + 1) - waistband_depth))
+    point2 = (point0[0], point1[1] - inseam)
+    point3 = (point0[0], point2[1] + ((inseam / 2) + 5))
+    point4 = (point0[0], point1[1] + (body_rise / 4))
+
+    # Define the fly reference point and fly curve point
+    point_fly_ref = (point0[0] - ((seat / 8) - 1), point1[1])
+    point5 = point_fly_ref
+    # point5 = (x2, y2)
+    point_fly_curve = create_diagonal_point(point_fly_ref[0], point_fly_ref[1], 3, 45)
+
+    # Define the remaining points
+    point6 = (point_fly_ref[0], point4[1])
+    point7 = (point_fly_ref[0], point0[1])
+    point8 = (point6[0] + ((seat / 4) + 2), point4[1])
+    point9 = (point_fly_ref[0] - ((seat / 16) + .5), point1[1])
+    point10 = (point7[0] + 1, point0[1])
+    point11 = (point10[0] + ((waist / 4) + 2.5), point0[1])
+    point12 = (point2[0] + (trouser_bottom_width / 2), point2[1])
+    point13 = (point2[0] - (trouser_bottom_width / 2), point2[1])
+    point14 = (point3[0] + ((trouser_bottom_width / 2) + 1.5), point3[1])
+    point15 = (point3[0] - ((trouser_bottom_width / 2) + 1.5), point3[1])
+    point16 = (point5[0] + (((seat / 8) - 1) / 4), point5[1])
+    point17 = (point16[0], point6[1])
+    point18 = (point16[0], point0[1])
+    point19 = (point16[0],((point16[1] + point18[1]) / 2))
+    point20 = (point18[0] + 2, point18[1])
+    point21 = point_at_distance(point19, point20, 1)
+    point22 = (point9[0] - ((((seat / 16) + .5) / 2) + .5), point9[1])
+    point23 = (point22[0], point22[1] - .5)
+    point24 = point_at_distance_with_fixed_y(point21, point0, (waist / 4) + 4.5)
+    point25 = find_point_along_line(point21, point25, ((waist / 4) + 4.5) / 2)
+    point26 = (point17[0] + ((seat / 4) + 3), point17[1])
+    point27 = (point12[0] + 2, point12[1])
+    point28 = (point13[0] - 2, point13[1])
+    point29 = (point14[0] + 2, point14[1])
+    point30 = (point15[0] - 2, point15[1])
+
+    # Define the waistband adjustment point
+    pointA = find_point_along_line(point10, point6, 1)
+
+    # Plot the points
+    points = [point0, point1, point2, point3, point4, point_fly_ref, point_fly_curve, point6, point7, point8, point9, point10, point11, point12, point13, point14, point15, pointA, point5, point16, point17, point18, point19, point20, point21, point22, point23, point24]
+    x_coords, y_coords = zip(*points)
+    plt.scatter(x_coords, y_coords, color='blue', label='Pattern Points')
+
+    # Annotate points
+    for i, (x, y) in enumerate(points, start=0):
+        plt.text(x, y, f'{i}', fontsize=12, ha='right')
+
+
+    # Draw the garment pattern
+    # plt.plot([])
+
+    # # Draw the waistband line
+    # draw_curved_line(pointA, point11, -.2)
+
+    # # Draw the bottoms of the legs
+    # plt.plot([point13[0], point12[0]], [point13[1], point12[1]], 'k-', label='Trouser bottom')
+
+    # # Draw fly curve
+    # draw_curved_line(point6, point9, 4.5)
+
+    # # Draw the fly line
+    # plt.plot([pointA[0], point6[0]], [pointA[1], point6[1]], 'k-')
+
+    # # Draw the inseam and side seam of the bottoms of the legs
+    # # plt.plot([point15[0], point13[0]], [point15[1], point13[1]], 'k-')
+    # plt.plot([point14[0], point12[0]], [point14[1], point12[1]], 'k-')
+
+    # # Draw the inseam
+    # draw_curved_line(point9, point13, 4.5)
+    # # point9_control = find_control_point(point9, point13, 4.5)
+    # # x_curve, y_curve = bezier_curve(point9, point9_control, point13)
+    # # plt.plot(x_curve, y_curve, 'k-')
+
+    # # Draw the hip curve
+    # draw_curved_line(point11, point8, .75)
+    # point11_control = find_control_point(point11, point8, .75)
+    # x_curve, y_curve = bezier_curve(point11, point11_control, point8)
+    # plt.plot(x_curve, y_curve, 'k-')
+
+    # # Draw the side seam
+    # plt.plot([point8[0], point14[0]], [point8[1], point14[1]], 'k-')
 
     plt.title('Trousers Pattern')
     plt.grid(False)
@@ -263,7 +376,8 @@ inseam_measurement = 86.36  # cm
 trouser_bottom_width = 22.6  # cm
 waistband_depth = 4  # cm
 
-draw_trouser_pattern(body_rise_measurement, waist_measurement, waistband_depth, trouser_bottom_width, inseam_measurement, seat_measurement)
+# draw_trouser_front_pattern(body_rise_measurement, waist_measurement, waistband_depth, trouser_bottom_width, inseam_measurement, seat_measurement)
+draw_trouser_pattern_points(body_rise_measurement, waist_measurement, waistband_depth, trouser_bottom_width, inseam_measurement, seat_measurement)
 
 # Prompt user to save to PDF
-prompt_save_to_pdf(body_rise_measurement, waist_measurement, waistband_depth, trouser_bottom_width, inseam_measurement, seat_measurement)
+# prompt_save_to_pdf(body_rise_measurement, waist_measurement, waistband_depth, trouser_bottom_width, inseam_measurement, seat_measurement)
