@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Pattern Generated Successfully{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="form-container text-center">
+            <div class="mb-4">
+                <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" class="text-success" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            
+            <h2 class="mb-3">Your Trouser Pattern is Ready!</h2>
+            <p class="lead mb-4">Your custom pattern has been successfully generated based on your measurements.</p>
+            
+            <div class="mb-4">
+                <a href="{{ url_for('download_pdf', filename=pdf_basename) }}" class="btn btn-primary btn-lg">
+                    Download PDF Pattern
+                </a>
+            </div>
+            
+            <div class="mt-5">
+                <p>Want to create another pattern?</p>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Create New Pattern</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

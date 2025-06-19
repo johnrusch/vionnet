@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}About Vionnet Pattern Generator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="form-container">
+            <h2 class="mb-4">About Vionnet Pattern Generator</h2>
+            
+            <p>Vionnet Pattern Generator is a web application designed to help users create custom-fit trouser patterns based on their specific measurements. Our aim is to make custom garment creation accessible to everyone, from novice sewists to experienced tailors.</p>
+            
+            <h4 class="mt-4">How It Works</h4>
+            <p>The application uses mathematical algorithms to generate precise trouser patterns based on key body measurements. Once you enter your measurements, our system calculates all the necessary points and curves to create a pattern that will fit your unique body shape.</p>
+            
+            <h4 class="mt-4">Required Measurements</h4>
+            <ul>
+                <li><strong>Waist:</strong> Circumference around your natural waistline</li>
+                <li><strong>Seat:</strong> Circumference around the fullest part of your buttocks</li>
+                <li><strong>Body Rise:</strong> Distance from waist to seat when seated</li>
+                <li><strong>Inseam:</strong> Length from crotch to floor along the inside of your leg</li>
+                <li><strong>Trouser Bottom Width:</strong> Desired width of each trouser leg at the hem</li>
+                <li><strong>Waistband Depth:</strong> Desired width of the waistband</li>
+            </ul>
+            
+            <h4 class="mt-4">Using Your Pattern</h4>
+            <p>The generated PDF contains both front and back pattern pieces. Print at 100% scale on A4 paper, ensuring no scaling is applied during printing. The pattern includes seam allowances and cutting lines.</p>
+            
+            <div class="mt-5">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Create Your Pattern</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

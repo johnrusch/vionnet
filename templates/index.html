@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Vionnet Trouser Pattern Generator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="form-container">
+            <h2 class="mb-4">Generate Your Custom Trouser Pattern</h2>
+            <p class="lead mb-4">Enter your measurements below to create a custom-fit trouser pattern ready for printing.</p>
+            
+            <form method="POST" action="{{ url_for('index') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.waist.label(class="form-label") }}
+                            {{ form.waist(class="form-control", placeholder="e.g., 100.33") }}
+                            {% if form.waist.errors %}
+                            <div class="text-danger">
+                                {% for error in form.waist.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.seat.label(class="form-label") }}
+                            {{ form.seat(class="form-control", placeholder="e.g., 107.95") }}
+                            {% if form.seat.errors %}
+                            <div class="text-danger">
+                                {% for error in form.seat.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.body_rise.label(class="form-label") }}
+                            {{ form.body_rise(class="form-control", placeholder="e.g., 29.21") }}
+                            {% if form.body_rise.errors %}
+                            <div class="text-danger">
+                                {% for error in form.body_rise.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.inseam.label(class="form-label") }}
+                            {{ form.inseam(class="form-control", placeholder="e.g., 86.36") }}
+                            {% if form.inseam.errors %}
+                            <div class="text-danger">
+                                {% for error in form.inseam.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.trouser_bottom_width.label(class="form-label") }}
+                            {{ form.trouser_bottom_width(class="form-control", placeholder="e.g., 22.6") }}
+                            {% if form.trouser_bottom_width.errors %}
+                            <div class="text-danger">
+                                {% for error in form.trouser_bottom_width.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            {{ form.waistband_depth.label(class="form-label") }}
+                            {{ form.waistband_depth(class="form-control", placeholder="e.g., 4") }}
+                            {% if form.waistband_depth.errors %}
+                            <div class="text-danger">
+                                {% for error in form.waistband_depth.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+            
+            {% if error %}
+            <div class="alert alert-danger mt-3">
+                {{ error }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
