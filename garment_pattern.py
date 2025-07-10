@@ -179,7 +179,7 @@ def draw_trouser_pattern_points(body_rise, waist, waistband_depth, trouser_botto
 
 def save_to_pdf(body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat, filename):
     """
-    Generate PDF using professional Patro-based pattern system.
+    Generate PDF using professional Patro-based pattern system with fallback.
     Enhanced with home sewist features and improved curve calculations.
     """
     try:
@@ -199,13 +199,19 @@ def save_to_pdf(body_rise, waist, waistband_depth, trouser_bottom_width, inseam,
         if success:
             print(f"Professional pattern saved to {filename}")
             print("Features: Enhanced curves, scale guide, printer optimization")
-        else:
-            print("Pattern generation completed with fallback system")
+            return
             
     except Exception as e:
-        print(f"Error generating pattern: {e}")
-        print("Falling back to basic pattern generation")
-        # Could add fallback to original PDF generation here if needed
+        print(f"Error with Patro system: {e}")
+    
+    # Fallback: Use legacy PDF generation with enhanced curves
+    print("Using fallback PDF generation with Shapely-enhanced curves")
+    try:
+        _legacy_save_to_pdf(body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat, filename)
+        print(f"Pattern saved to {filename} using enhanced legacy system")
+    except Exception as e:
+        print(f"Error in fallback PDF generation: {e}")
+        raise e
 
 
 # Legacy function - kept for backward compatibility but now uses Patro system
