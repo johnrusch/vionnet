@@ -74,12 +74,7 @@ def index():
             trouser_bottom_width = float(trouser_bottom_width)
             waistband_depth = float(waistband_depth)
             
-            # Calculate pattern points
-            trouser_points = draw_trouser_pattern_points(
-                body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat, show_plot=False
-            )
-            
-            # Save pattern to PDF
+            # Generate and save pattern using professional Patro system
             save_to_pdf(
                 body_rise, waist, waistband_depth, trouser_bottom_width, inseam, seat, pdf_path
             )
