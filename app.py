@@ -6,14 +6,9 @@ import os
 import uuid
 from datetime import datetime
 
-# Configure matplotlib to use non-interactive backend before importing it elsewhere
-import matplotlib
-matplotlib.use('Agg')  # This prevents the 'Matplotlib is currently using agg' warning
-
-import io
-
-# Import the pattern generation functions after matplotlib configuration
-from garment_pattern import draw_trouser_pattern_points, draw_trouser_front_pattern, draw_trouser_back_pattern, save_to_pdf
+# Import professional pattern generation system (matplotlib removed)
+from patro_pattern_system import PatroPatternGenerator, create_trouser_pattern
+from garment_pattern import save_to_pdf  # Enhanced with Patro backend
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'dev-key-for-forms'
